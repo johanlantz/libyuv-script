@@ -49,8 +49,7 @@ def checkoutLibyuv():
 #  Completely fresh builds for each arch to avoid cleaning issues. 						  #
 ###########################################################################################
 def buildForiOS():
-	#It is not documented on the Google page but the arm64 build actucally produces a fat binary with armv7, armv7s and arm64
-	#Main problem right now is that ia32 produces a 64 bit build, not a i386 version. Due to this we can not produce the i386 build for now.
+	#It is not documented on the Google page but the arm64 build actucally produces a fat binary with armv7, armv7s and arm64 and the x86_64 build builds the i386 as well if subarch is defined
 	archList = ["arm64", "x86_64"]
    	if os.path.exists("libs"):
 		shutil.rmtree("libs")
@@ -85,10 +84,10 @@ def buildForiOS():
 			commandLine = "GYP_DEFINES=\"OS=ios target_arch=armv7 target_subarch=64\" GYP_CROSSCOMPILE=1 GYP_GENERATOR_FLAGS=\"output_dir=out_ios\" ./gyp_libyuv -f ninja --depth=. libyuv.gyp && "
 		elif (arch == "x86_64"):
 			targetDir = "out_ios/Release-iphonesimulator"
-			commandLine = "GYP_DEFINES=\"OS=ios target_arch=x64\" GYP_CROSSCOMPILE=1 GYP_GENERATOR_FLAGS=\"output_dir=out_ios\" ./gyp_libyuv -f ninja --depth=. libyuv.gyp && "
+			commandLine = "GYP_DEFINES=\"OS=ios target_arch=x64  target_subarch=32\" GYP_CROSSCOMPILE=1 GYP_GENERATOR_FLAGS=\"output_dir=out_ios\" ./gyp_libyuv -f ninja --depth=. libyuv.gyp && "
 		elif (arch == "i386"):
 			targetDir = "out_ios/Release-iphonesimulator"
-			commandLine = "GYP_DEFINES=\"OS=ios target_arch=ia32\" GYP_CROSSCOMPILE=1 GYP_GENERATOR_FLAGS=\"output_dir=out_ios\" ./gyp_libyuv -f ninja --depth=. libyuv.gyp && "
+			commandLine = "GYP_DEFINES=\"OS=ios target_arch=ia32  target_subarch=32\" GYP_CROSSCOMPILE=1 GYP_GENERATOR_FLAGS=\"output_dir=out_ios\" ./gyp_libyuv -f ninja --depth=. libyuv.gyp && "
 		
 		else:
 			print("Error: Unsupported architecture " + arch);
